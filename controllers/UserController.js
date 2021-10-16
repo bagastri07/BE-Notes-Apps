@@ -1,6 +1,7 @@
 const User = require('../models/UserModel')
 const bcrypt = require('bcrypt')
 const response = require('../_helpers/response')
+const passport = require('passport')
 
 const UserControllers = {
     create: (req, res) => {
@@ -26,6 +27,28 @@ const UserControllers = {
             if (err) return response(res, 500, false, err)
             return response(res, 200, true, 'Data ready', doc)
         })
+        console.log(req.user)
+    },
+    view: (req, res) => {
+        User.findOne({username: req.user.username}, (err, doc) => {
+            if (err) return response(res, 500, false, err)
+            return response(res, 200, true, 'Data ready', doc)
+        })
+    },
+    login: (req, res, next) => {
+        passport.authenticate('local', function(err, user, info) {
+            if (err) return response(res, 500, false, err)
+            if (!user) response(res, 500, false, 'No User found')
+            req.logIn(user, function(err) {
+              if (err) { return next(err); }
+              return response(res, 200, true, 'Succes Login', user);
+            });
+          })(req, res, next);
+    },
+    logout: (req, res) => {
+        let username = req.user.username
+        req.logout()
+        return response(res, 200, true, 'You are logout successfully', {username: username})
     }
 }
 

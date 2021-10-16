@@ -1,5 +1,7 @@
 const express = require('express')
 const mongoose = require('mongoose')
+const session = require('express-session')
+const passport = require('passport')
 require('dotenv').config()
 
 const app = express()
@@ -15,9 +17,24 @@ mongoose.connect(process.env.DATABASE_URL, {useNewUrlParser: true, useUnifiedTop
         throw err;
     } else {
         console.log('Database Connected');
-    };
+    }
   }
-);
+)
+
+//
+require('./passport-config/passportConfig')(passport)
+
+//Session
+app.use(session({
+    secret: process.env.SECRET,
+    resave: false,
+    saveUninitialized: false,
+    cookie: {
+        maxAge: 4 * 60 * 60 * 1000
+    }
+}))
+app.use(passport.initialize())
+app.use(passport.session())
 
 //Use Route
 app.use('/user', require('./routers/UserRouter'))
