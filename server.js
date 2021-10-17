@@ -2,12 +2,19 @@ const express = require('express')
 const mongoose = require('mongoose')
 const session = require('express-session')
 const passport = require('passport')
+const cors = require('cors')
 require('dotenv').config()
 
 const app = express()
 
 const port = process.env.PORT || 4000
 
+//Cors Set uo
+app.use(cors({
+    origin: '*'
+}))
+
+//BodyParser
 app.use(express.json())
 app.use(express.urlencoded({extended:true}))
 
