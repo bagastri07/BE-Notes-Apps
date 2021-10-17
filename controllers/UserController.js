@@ -35,6 +35,15 @@ const UserControllers = {
             return response(res, 200, true, 'Data ready', doc)
         })
     },
+    delete: (req, res) => {
+        User.findOneAndRemove({username: req.user.username}, (err, doc) => {
+            if (err) return response(res, 500, false, err)
+            if (!doc)return response(res, 400, true, 'Account not found')
+            //Logut user
+            req.logout()
+            return response(res, 200, true, 'Account Deleted & Account has been logout', doc)
+        })
+    },
     login: (req, res, next) => {
         passport.authenticate('local', function(err, user, info) {
             if (err) return response(res, 500, false, err)

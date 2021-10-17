@@ -6,9 +6,10 @@ const isAuthenticated = require('../midlewares/isAuthenticated')
 const UserController = require('../controllers/UserController')
 
 router.post('/register', UserController.create)
-router.get('/',isAuthenticated ,UserController.view)
-router.get('/all',isAuthenticated ,UserController.viewAll)
+router.get('/', isAuthenticated, UserController.view)
+router.get('/all', isAuthenticated, UserController.viewAll)
 router.post('/login', UserController.login)
 router.post('/logout', UserController.logout)
+router.delete('/', isAuthenticated, UserController.delete)
 
 module.exports = router
