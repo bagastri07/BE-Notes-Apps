@@ -23,7 +23,11 @@ const UserSchema = new Schema({
     picUrl: {
         type: String,
         default: null
-    }
+    },
+    notes: [{
+        type: Schema.Types.ObjectId,
+        ref: 'Note'
+    }]
 })
 
 UserSchema.pre('save', function (next) {

@@ -45,6 +45,7 @@ app.use(passport.session())
 
 //Use Route
 app.use('/user', require('./routers/UserRouter'))
+app.use('/note', require('./routers/NoteRouter'))
 
 app.get('/', (req, res) => {
     res.json('Welcome to Notes API')
