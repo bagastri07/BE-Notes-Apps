@@ -7,6 +7,7 @@ const NoteController = {
         //Split data
         const noteData = req.body
         noteData.tags = noteData.tags.split(',')
+        noteData.user = req.user._id
 
         //make data to mongodb
         Note.create(req.body, (err, noteDoc) => {
@@ -40,6 +41,28 @@ const NoteController = {
             .catch((err) => {
                 return response(res, 500, false, err)
             })
+    },
+    delete: (req, res) => {
+        Note.findByIdAndDelete(req.params.id, (err, note) => {
+            if (err) return response(res, 500, false, err)
+            if (!note) return response(res, 400, false, 'No note found')
+            User.findByIdAndUpdate({_id: note.user}, {
+                $pull: {
+                    'notes': note._id
+                }
+            }, {upsert: true, new: true}, (err, user) => {
+                if (err) response(res, 500, false, err)
+                data = {
+                    note: note,
+                    user: {
+                        _id: user._id,
+                        username: user.username,
+                        notes: user.notes
+                    }
+                }
+                return response(res, 200, true, 'Note Deleted', data)
+            })
+        })
     }
 }
 

@@ -7,5 +7,6 @@ const NoteController = require('../controllers/NoteController')
 
 router.post('/', isAuthenticated, NoteController.create)
 router.get('/', isAuthenticated, NoteController.view)
+router.delete('/:id', isAuthenticated, NoteController.delete)
 
 module.exports = router

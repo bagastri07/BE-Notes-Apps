@@ -1,4 +1,5 @@
 const User = require('../models/UserModel')
+const Note = require('../models/NoteSchema')
 const bcrypt = require('bcrypt')
 const response = require('../_helpers/response')
 const passport = require('passport')
@@ -36,12 +37,20 @@ const UserControllers = {
         })
     },
     delete: (req, res) => {
-        User.findOneAndRemove({username: req.user.username}, (err, doc) => {
+        User.findOneAndRemove({username: req.user.username}, (err, user) => {
             if (err) return response(res, 500, false, err)
-            if (!doc)return response(res, 400, true, 'Account not found')
-            //Logut user
-            req.logout()
-            return response(res, 200, true, 'Account Deleted & Account has been logout', doc)
+            if (!user)return response(res, 400, true, 'Account not found')
+            //delete all note of this user
+            Note.deleteMany({user: user._id}, (err, note) => {
+                if (err) return response(res, 500, false, err)
+                //Logut user
+                req.logout()
+                data = {
+                    user: user,
+                    note: note
+                }
+                return response(res, 200, true, 'Account Deleted & Account has been logout', data)
+                })
         })
     },
     login: (req, res, next) => {

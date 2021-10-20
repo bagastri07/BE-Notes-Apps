@@ -17,6 +17,10 @@ const NoteSchema = new Schema({
     isComplete: {
         type: Boolean,
         default: false
+    },
+    user: {
+        type: Schema.Types.ObjectId,
+        ref: 'User'
     }
 },{timestamps: true})
 
