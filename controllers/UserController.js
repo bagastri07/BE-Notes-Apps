@@ -56,7 +56,7 @@ const UserControllers = {
     login: (req, res, next) => {
         passport.authenticate('local', function(err, user, info) {
             if (err) return response(res, 500, false, err)
-            if (!user) response(res, 500, false, 'No User found')
+            if (!user) response(res, 400, false, 'No User found')
             req.logIn(user, function(err) {
               if (err) { return next(err); }
               return response(res, 200, true, 'Succes Login', user);
